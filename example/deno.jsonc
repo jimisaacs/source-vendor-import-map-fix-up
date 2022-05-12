@@ -1,0 +1,11 @@
+{
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+  "compilerOptions": {
+    "strict": true
+  },
+  "importMap": "./src/import_map.json",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read main.ts",
+    "prod": "deno run --allow-net --allow-read --import-map ./vendor/import_map.json --no-remote main.ts"
+  }
+}
