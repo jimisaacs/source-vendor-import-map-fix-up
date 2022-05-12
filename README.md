@@ -34,14 +34,10 @@ If you do not want to install and run on-demand, then in the following example, 
 ## Example
 
 
-First, lets clone this repo and go into the example:
+First, lets clone this repo, go into the example, and make sure the eerver can run in dev mode:
 ```sh
 > git clone git@github.com:jimisaacs/source_vendor_import_map_fix_up.git
 > cd source_vendor_import_map_fix_up/example
-```
-
-Make sure the server can run in dev mode:
-```sh
 > deno task dev
 ```
 
@@ -50,17 +46,77 @@ Expected output is:
 This server is up and running on http://localhost:8080/
 ```
 
-Then, once in the example directory, run `deno vendor`, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
+Then, still in the example directory, run `deno vendor`, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
 ```sh
 > deno vendor --import-map=src/import_map.json main.ts
 ```
 
-Then, fix up the file `./vendor/import_map.json` file in place with `--write`:
-```sh
-> source_vendor_import_map_fix_up --write
+### Now take a moment to look at the diff
+
+This is the source import map that we passed to `deno vendor --import-map=[HERE]`:
+```json
+{
+  "imports": {
+    "oak": "https://deno.land/x/oak@v10.5.1/mod.ts",
+    "react": "https://esm.sh/react@17",
+    "react-dom/server": "https://esm.sh/react-dom@17/server"
+  }
+}
 ```
 
-Now lets make sure the server can run in prod mode:
+This is the vendor import map that was generated `./vendor/import_map.json`:
+```json
+{
+  "imports": {
+    "https://cdn.esm.sh/": "./cdn.esm.sh/",
+    "https://deno.land/": "./deno.land/",
+    "https://esm.sh/": "./esm.sh/",
+    "https://raw.githubusercontent.com/": "./raw.githubusercontent.com/"
+  },
+  "scopes": {
+    "./cdn.esm.sh/": {
+      "/v78/react@17.0.2/deno/react.js": "./cdn.esm.sh/v78/react@17.0.2/deno/react.js"
+    },
+    "./deno.land/": {
+      "oak": "./deno.land/x/oak@v10.5.1/mod.ts"
+    },
+    "./esm.sh/": {
+      "react": "./esm.sh/react@17.js",
+      "react-dom/server": "./esm.sh/react-dom@17/server.js"
+    }
+  }
+}
+```
+
+Then finally execute `deno task source_vendor_import_map_fix_up` for the following output, which is the fixed up import map. See what it did?
+```json
+{
+  "imports": {
+    "https://cdn.esm.sh/": "./cdn.esm.sh/",
+    "https://deno.land/": "./deno.land/",
+    "https://esm.sh/": "./esm.sh/",
+    "https://raw.githubusercontent.com/": "./raw.githubusercontent.com/",
+    "oak": "./deno.land/x/oak@v10.5.1/mod.ts",
+    "react": "./esm.sh/react@17.js",
+    "react-dom/server": "./esm.sh/react-dom@17/server.js"
+  },
+  "scopes": {
+    "./cdn.esm.sh/": {
+      "/v78/react@17.0.2/deno/react.js": "./cdn.esm.sh/v78/react@17.0.2/deno/react.js"
+    }
+  }
+}
+```
+
+
+### Finalize
+
+So then, fix up `./vendor/import_map.json` in place with `--write`:
+```sh
+> deno task source_vendor_import_map_fix_up --write
+```
+
+So then we can make sure the server can still run in prod mode (notice the `--no-remote` in the task config):
 ```sh
 > deno task prod
 ```

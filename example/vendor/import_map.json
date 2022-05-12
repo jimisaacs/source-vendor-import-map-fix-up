@@ -3,14 +3,18 @@
     "https://cdn.esm.sh/": "./cdn.esm.sh/",
     "https://deno.land/": "./deno.land/",
     "https://esm.sh/": "./esm.sh/",
-    "https://raw.githubusercontent.com/": "./raw.githubusercontent.com/",
-    "oak": "./deno.land/x/oak@v10.5.1/mod.ts",
-    "react": "./esm.sh/react@17.js",
-    "react-dom/server": "./esm.sh/react-dom@17/server.js"
+    "https://raw.githubusercontent.com/": "./raw.githubusercontent.com/"
   },
   "scopes": {
     "./cdn.esm.sh/": {
       "/v78/react@17.0.2/deno/react.js": "./cdn.esm.sh/v78/react@17.0.2/deno/react.js"
+    },
+    "./deno.land/": {
+      "oak": "./deno.land/x/oak@v10.5.1/mod.ts"
+    },
+    "./esm.sh/": {
+      "react": "./esm.sh/react@17.js",
+      "react-dom/server": "./esm.sh/react-dom@17/server.js"
     }
   }
 }
