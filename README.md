@@ -34,7 +34,7 @@ If you do not want to install and run on-demand, then in the following example, 
 ## Example
 
 
-First, lets clone this repo, go into the example, and make sure the eerver can run in dev mode:
+First, lets clone this repo, go into the example, and make sure the server can run in "dev mode":
 ```sh
 > git clone git@github.com:jimisaacs/source_vendor_import_map_fix_up.git
 > cd source_vendor_import_map_fix_up/example
@@ -46,14 +46,14 @@ Expected output is:
 This server is up and running on http://localhost:8080/
 ```
 
-Then, still in the example directory, run `deno vendor`, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
+Then, still in the example directory, execute `deno vendor`, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
 ```sh
 > deno vendor --import-map=src/import_map.json main.ts
 ```
 
 ### Now take a moment to look at the diff
 
-This is the source import map that we passed to `deno vendor --import-map=[HERE]`:
+The following is the source import map that we passed to `deno vendor --import-map=[HERE]`:
 ```json
 {
   "imports": {
@@ -64,7 +64,7 @@ This is the source import map that we passed to `deno vendor --import-map=[HERE]
 }
 ```
 
-This is the vendor import map that was generated `./vendor/import_map.json`:
+The following is the vendor import map that should have been generated `./vendor/s`:
 ```json
 {
   "imports": {
