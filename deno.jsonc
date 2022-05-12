@@ -5,7 +5,7 @@
 	},
 	"lint": {
 		"files": {
-			"include": ["main.ts", "src/", "test/"]
+			"include": ["source_vendor_import_map_fix_up.ts", "src/", "test/"]
 		},
 		"rules": {
 			"tags": ["recommended"],
@@ -14,10 +14,7 @@
 		}
 	},
 	"fmt": {
-		"files": {
-			"include": ["./"],
-			"exclude": [".newt-cache/", "vendor", "build", "vendor"]
-		},
+		"files": { "include": ["./"], "exclude": ["example/vendor"] },
 		"options": {
 			"useTabs": true,
 			"lineWidth": 120,

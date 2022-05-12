@@ -1,13 +1,13 @@
 {
-  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
-  "compilerOptions": {
-    "strict": true
-  },
-  "importMap": "./src/import_map.json",
-  "tasks": {
-    "dev": "deno run --allow-net --allow-read main.ts",
-    "prod": "deno run --allow-net --allow-read --import-map=./vendor/import_map.json --no-remote main.ts",
-    "source_vendor_import_map_fix_up": "deno run --allow-read --allow-write https://deno.land/x/source_vendor_import_map_fix_up/source_vendor_import_map_fix_up.ts",
-    "vendor-fixed-up": "deno vendor --import-map=./src/import_map.json --force main.ts && deno task source_vendor_import_map_fix_up --write"
-  }
+	"$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+	"compilerOptions": {
+		"strict": true
+	},
+	"importMap": "./import_map.json",
+	"tasks": {
+		"dev": "deno run --allow-net --allow-read main.ts",
+		"prod": "deno run --allow-net --allow-read --import-map=./vendor/import_map.json --no-remote main.ts",
+		"source_vendor_import_map_fix_up": "deno run --allow-read --allow-write ../source_vendor_import_map_fix_up.ts",
+		"vendor": "deno vendor --force main.ts && deno task source_vendor_import_map_fix_up --write"
+	}
 }

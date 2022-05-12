@@ -1,4 +1,4 @@
-import { init } from "./src/server.ts";
+import { init } from './src/server.ts';
 
 const port = 8080;
 const server = await init();

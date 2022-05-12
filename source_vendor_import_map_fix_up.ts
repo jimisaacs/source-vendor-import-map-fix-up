@@ -7,15 +7,13 @@ const command = new Command()
 	.option(
 		'--source-import-map=[path-to-json-file]',
 		'import map file name of what was passed into \'deno vendor --import-map=[HERE]\').',
-		{
-			required: true,
-			default: 'src/import_map.json',
-		},
+		{ required: true, default: 'import_map.json' },
 	)
-	.option('--vendor-import-map=[path-to-json-file]', 'import map file name of what \'deno vendor\' generated.', {
-		required: true,
-		default: 'vendor/import_map.json',
-	})
+	.option(
+		'--vendor-import-map=[path-to-json-file]',
+		'import map file name of what \'deno vendor\' generated.',
+		{ required: true, default: 'vendor/import_map.json' },
+	)
 	.option('-w, --write', 'write output to --vendor-import-map');
 
 try {
@@ -29,35 +27,44 @@ try {
 
 	if (sourceImportMap.imports && vendorImportMap.imports && vendorImportMap.scopes) {
 		for (const [sourceImportKey, sourceImportValue] of Object.entries(sourceImportMap.imports)) {
+			if (
+				!sourceImportKey || !sourceImportValue || sourceImportValue.startsWith('.') || sourceImportValue.startsWith('/')
+			) {
+				continue;
+			}
+			let sourceImportOriginScopeKey;
 			try {
-				if (!sourceImportKey || !sourceImportValue) continue;
-				const sourceImportOriginScopeKey = vendorImportMap.imports[`${new URL(sourceImportValue).origin}/`];
-				if (sourceImportOriginScopeKey) {
-					const vendorOriginScope = vendorImportMap.scopes[sourceImportOriginScopeKey];
-					if (vendorOriginScope) {
-						// This is where `deno vendor` currently puts things
-						const vendorMappedValue = vendorOriginScope[sourceImportKey];
-						// If we have a vendored source import in the wrong place, fix it up.
-						if (vendorMappedValue) {
-							// Set the source import to the vendor mapped one (Should workd with --no-remote).
-							vendorImportMap.imports[sourceImportKey] = vendorMappedValue;
-							// Then cleanup the location of erroneous scopes that should have been imports.
-							delete vendorOriginScope[sourceImportKey];
-							if (Object.keys(vendorOriginScope).length == 0) {
-								delete vendorImportMap.scopes[sourceImportOriginScopeKey];
-							}
-						}
-					}
-				}
-			} catch (err) {}
-		}
-	}
+				const origin = new URL(sourceImportValue).origin;
+				if (!origin || origin == 'null') continue;
+				sourceImportOriginScopeKey = vendorImportMap.imports[`${origin}/`];
+			} catch (err) {
+				continue;
+			}
+			if (!sourceImportOriginScopeKey) continue;
+			const vendorOriginScope = vendorImportMap.scopes[sourceImportOriginScopeKey];
+			if (!vendorOriginScope) continue;
 
-	const json = JSON.stringify(vendorImportMap, null, 2);
-	if (writeToVendor) {
-		await Deno.writeTextFile(vendorImportMapFilePath, json);
-	} else {
-		await Deno.stdout.write(new TextEncoder().encode(json));
+			// This is where `deno vendor` currently puts things
+			const vendorMappedValue = vendorOriginScope[sourceImportKey];
+			// If we have a vendored source import in the wrong place, fix it up.
+			if (!vendorMappedValue) continue;
+
+			// Set the source import to the vendor mapped one (Should workd with --no-remote).
+			vendorImportMap.imports[sourceImportKey] = vendorMappedValue;
+
+			// Then cleanup the location of erroneous scopes that should have been imports.
+			delete vendorOriginScope[sourceImportKey];
+			if (Object.keys(vendorOriginScope).length == 0) {
+				delete vendorImportMap.scopes[sourceImportOriginScopeKey];
+			}
+		}
+
+		const json = JSON.stringify(vendorImportMap, null, 2);
+		if (writeToVendor) {
+			await Deno.writeTextFile(vendorImportMapFilePath, json);
+		} else {
+			await Deno.stdout.write(new TextEncoder().encode(json));
+		}
 	}
 } catch (err) {
 	command.showHelp();

@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOMServer from "react-dom/server";
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
 export const App = () => <h1>Hello, World!</h1>;
 
