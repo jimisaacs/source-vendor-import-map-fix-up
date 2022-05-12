@@ -46,14 +46,14 @@ Expected output is:
 This server is up and running on http://localhost:8080/
 ```
 
-Then, still in the example directory, execute `deno vendor`, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
+Then, still in the example directory, execute the following, and generate files under `./vendor`, including the `./vendor/import_map.json` file:
 ```sh
 > deno vendor --import-map=src/import_map.json main.ts
 ```
 
 ### Now take a moment to look at the diff
 
-The following is the source import map that we passed to `deno vendor --import-map=[HERE]`:
+The following is the source import map that we passed to `deno vendor --import-map={HERE}`:
 ```json
 {
   "imports": {
@@ -64,7 +64,7 @@ The following is the source import map that we passed to `deno vendor --import-m
 }
 ```
 
-The following is the vendor import map that should have been generated `./vendor/s`:
+The following is the vendor import map that should have been generated `./vendor/import_map.json`:
 ```json
 {
   "imports": {
