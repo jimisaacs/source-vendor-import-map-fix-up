@@ -1,0 +1,28 @@
+{
+	"$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+	"compilerOptions": {
+		"strict": true
+	},
+	"lint": {
+		"files": {
+			"include": ["main.ts", "src/", "test/"]
+		},
+		"rules": {
+			"tags": ["recommended"],
+			"include": ["ban-untagged-todo"],
+			"exclude": ["ban-ts-comment", "no-unused-vars"]
+		}
+	},
+	"fmt": {
+		"files": {
+			"include": ["./"],
+			"exclude": [".newt-cache/", "vendor", "build", "vendor"]
+		},
+		"options": {
+			"useTabs": true,
+			"lineWidth": 120,
+			"singleQuote": true,
+			"proseWrap": "preserve"
+		}
+	}
+}
